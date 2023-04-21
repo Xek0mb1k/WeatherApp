@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import androidx.lifecycle.ViewModelProvider
 import com.xekombik.weatherapp.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,18 +24,43 @@ class MainActivity : AppCompatActivity() {
 
         bu.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                vm.loadWeather("55.852195, 37.567799")
+                val weather = vm.loadWeather("55.85, 37")
                 runOnUiThread {
-//                    val weather = vm.currentWeather
-//                    Log.d(
-//                        "WEATHER_TEST",
-//                        (weather.location.country) + "  " + (weather.current.last_updated)
-//                    )
+                    Log.d(
+                        "WEATHER_TEST",
+                        (weather.location.name) + "  " +
+                                (weather.current.last_updated) + " " +
+                                (weather.current.temp_c) + " " +
+                                (weather.location.localtime)
+                    )
                 }
             }
-
-
-
         }
+        val thb = findViewById<Button>(R.id.thb)
+        val ndb = findViewById<Button>(R.id.ndb)
+
+        thb.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                val weatherToday = vm.getWeatherTodayHistory("55.85, 37", "2023-01-01")
+                runOnUiThread {
+                    for (item in weatherToday){
+                        Log.d("WEATHER_TEST", item.time + " " + item.temp_c + " " + item.condition.text)
+                    }
+                }
+            }
+        }
+
+        ndb.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                val weatherFuture = vm.getFutureWeatherHistory("55.85, 37", "2023-05-20")
+                runOnUiThread {
+                    for (item in weatherFuture){
+                        Log.d("WEATHER_TEST", item.time + " " + item.temp_c)
+                    }
+                }
+            }
+        }
+
+
     }
 }

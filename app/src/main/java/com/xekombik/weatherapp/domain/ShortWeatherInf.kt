@@ -2,6 +2,7 @@ package com.xekombik.weatherapp.domain
 
 data class ShortWeatherInf(
     val time: String,
-    val condition: String,
-    val temperature: Float
+    val condition: Condition,
+    val temp_c: Double,
+    val temp_f: Double,
 )

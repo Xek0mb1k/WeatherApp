@@ -30,37 +30,3 @@ data class Current(
     val wind_kph: Double,
     val wind_mph: Double
 )
-
-data class Location(
-    val country: String,
-    val lat: Double,
-    val localtime: String,
-    val localtime_epoch: Int,
-    val lon: Double,
-    val name: String,
-    val region: String,
-    val tz_id: String
-)
-
-data class Condition(
-    val code: Int,
-    val icon: String,
-    val text: String
-)
-
-//data class CurrentWeather(
-//    val region: String,
-//    val temp_c: Int,
-//    val temp_f: Int,
-//
-//    val last_updated: String,
-//    val is_day: Boolean,
-//    val condition: String,
-//
-//    val useKph: Boolean,
-//
-//    val humidity: Int,
-//    val wind: String,
-//    val pressure_mb: Float,
-//    val visibility: Float,
-//)
