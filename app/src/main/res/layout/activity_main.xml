@@ -4,41 +4,294 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F0FA"
     tools:context=".presentation.MainActivity">
 
-    <Button
-        android:id="@+id/bu"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/activityMainToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/menu_item"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+
+        <TextView
+            android:id="@+id/locationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:drawableLeftCompat="@drawable/ic_baseline_location_on_24"
+            app:drawableRightCompat="@drawable/ic_baseline_arrow_right_24"
+            tools:text="Location" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mainCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="16dp"
+        android:foregroundGravity="center"
+        app:cardCornerRadius="12dp"
+
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activityMainToolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/day_linear_gradient">
+
+            <TextView
+                android:id="@+id/todayDataTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Monday, 20 December 2021" />
+
+
+            <ImageView
+
+                android:id="@+id/weatherImageView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="24dp"
+                android:contentDescription="@string/weather_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/todayDataTextView"
+                tools:src="@drawable/d308" />
+
+            <TextView
+                android:id="@+id/weatherTodayTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/weatherTodayWeather"
+                app:layout_constraintStart_toEndOf="@+id/weatherImageView"
+                app:layout_constraintTop_toTopOf="@+id/weatherImageView"
+                tools:text="18º C" />
+
+            <TextView
+                android:id="@+id/weatherTodayWeather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/weatherImageView"
+                app:layout_constraintStart_toEndOf="@+id/weatherImageView"
+                app:layout_constraintTop_toBottomOf="@+id/weatherTodayTemperature"
+                tools:text="Cloudy Rain" />
+
+            <TextView
+
+                android:id="@+id/lastUpdatedDataTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:drawablePadding="8dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:drawableRightCompat="@drawable/ic_baseline_refresh_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weatherImageView"
+                tools:text="Last updated 3.00" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="11dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainCardView">
+
+        <LinearLayout
+            android:id="@+id/hourlyTemperatureLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="78dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:backgroundTint="?attr/backgroundTint"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/weatherHourlyImageView"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="12dp"
+                        android:contentDescription="@string/weather_icon"
+                        tools:src="@drawable/d182" />
+
+                    <TextView
+                        android:id="@+id/hourlyTemperatureTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="20º" />
+
+                    <TextView
+                        android:id="@+id/hourlyTimeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="9dp"
+                        android:layout_marginBottom="12dp"
+                        android:textColor="#494343"
+                        android:textSize="12sp"
+                        tools:text="4:00" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+
+        android:id="@+id/dailyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="GET WEATHER"
-        app:layout_constraintBottom_toTopOf="@+id/thb"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/nt_days"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView" />
 
-    <Button
-        android:id="@+id/thb"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:id="@+id/scrollViewFromDailyList"
+        android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
-        android:text="GET TODAY HISTORY"
-        app:layout_constraintBottom_toTopOf="@+id/ndb"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bu" />
+        app:layout_constraintTop_toBottomOf="@+id/dailyTextView">
 
-    <Button
-        android:id="@+id/ndb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GET NEXT DAY HISTORY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thb" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/currentDayCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="6dp"
+                android:backgroundTint="?attr/backgroundTint"
+                app:cardCornerRadius="12dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/dailyWeatherIconImageView"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="16dp"
+                        android:contentDescription="@string/weather_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@drawable/d296" />
+
+                    <TextView
+                        android:id="@+id/dayOnTheWeekTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/weatherStateTextView"
+                        app:layout_constraintStart_toEndOf="@+id/dailyWeatherIconImageView"
+                        app:layout_constraintTop_toTopOf="@+id/dailyWeatherIconImageView"
+                        tools:text="Monday" />
+
+                    <TextView
+                        android:id="@+id/weatherStateTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:textColor="#494343"
+                        android:textSize="13sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/dailyWeatherIconImageView"
+                        app:layout_constraintStart_toEndOf="@+id/dailyWeatherIconImageView"
+                        app:layout_constraintTop_toBottomOf="@+id/dayOnTheWeekTextView"
+                        tools:text="Thunderstorm" />
+
+                    <TextView
+                        android:id="@+id/dailyTemperatureTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/arrowImageView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.509"
+                        tools:text="19º C" />
+
+                    <ImageView
+                        android:id="@+id/arrowImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:contentDescription="@string/arrow"
+                        android:rotation="-90"
+                        android:src="@drawable/ic_baseline_arrow_right_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

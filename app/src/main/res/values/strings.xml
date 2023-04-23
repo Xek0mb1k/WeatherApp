@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="weather_icon">WeatherIcon</string>
+    <string name="refresh_data">RefreshData</string>
+    <string name="hourly_weather">Hourly Weather</string>
+    <string name="nt_days">Next 14 days</string>
+    <string name="location_icon">LocationIcon</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="arrow">arrow</string>
+    <string name="information_details">Weather details</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="air_pressure">Air pressure</string>
+    <string name="humidity_text">Humidity</string>
+    <string name="wind_icon">windIcon</string>
+    <string name="wind">Wind</string>
+    <string name="visibility">Visibility</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="settingsTV">Settings</string>
+    <string name="icon">Icon</string>
+    <string name="about_app">WeatherApp\nVersion 1.0</string>
+    <string name="github">github</string>
+    <string name="current">Current</string>
 </resources>
