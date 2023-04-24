@@ -20,6 +20,7 @@
 
         <item name="backgroundTint">@color/card_background_light</item>
 
+        <item name="rippleColor">#32000000</item>
 
     </style>
 </resources>

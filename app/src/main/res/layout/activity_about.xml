@@ -31,7 +31,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/ripple_button"
+        android:background="@drawable/ripple_back"
         android:contentDescription="@string/github"
         android:src="@drawable/github" />
 
