@@ -14,7 +14,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <DropDownPreference
-            android:defaultValue="ºC"
+            android:defaultValue="km/h"
             android:dialogTitle="Select Speed Units"
             android:entries="@array/speed_units"
             android:entryValues="@array/speed_units"
