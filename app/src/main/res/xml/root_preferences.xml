@@ -24,14 +24,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Api">
-
-        <EditTextPreference
-            android:defaultValue="aaa82c559ee1401eb1853533231104"
-            android:key="api_key"
-            android:summary="You need to change the API if your application stops working. You can find the API key at https://www.weatherapi.com/"
-            android:title="Api key" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>

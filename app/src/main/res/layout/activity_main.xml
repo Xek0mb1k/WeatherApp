@@ -22,8 +22,8 @@
             android:id="@+id/locationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:drawablePadding="8dp"
+            android:gravity="center_vertical"
             android:textSize="14sp"
             android:textStyle="bold"
             app:drawableLeftCompat="@drawable/ic_baseline_location_on_24"
@@ -120,23 +120,24 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <ScrollView
+    <HorizontalScrollView
         android:id="@+id/scrollView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="11dp"
         android:layout_marginTop="24dp"
+        android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainCardView">
 
         <LinearLayout
             android:id="@+id/hourlyWeatherLL"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
 
-    </ScrollView>
+    </HorizontalScrollView>
 
     <TextView
 
@@ -165,7 +166,7 @@
             android:id="@+id/fromDailyListLL"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
 
     </ScrollView>

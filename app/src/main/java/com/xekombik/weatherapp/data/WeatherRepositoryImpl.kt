@@ -12,7 +12,7 @@ import java.util.*
 
 object WeatherRepositoryImpl : WeatherRepository {
 
-    private const val apiKey = "aaa82c559ee1401eb1853533231104"
+    private const val apiKey = "0620d325c4474180ae5193531232504"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://api.weatherapi.com/")
@@ -23,25 +23,24 @@ object WeatherRepositoryImpl : WeatherRepository {
 
 
     @SuppressLint("SimpleDateFormat")
-    override suspend fun getFutureWeatherHistory(
-        location: String,
-        data: String
+    override suspend fun getForecast(
+        location: String
     ): List<ShortWeatherInf> {
         val sdf = SimpleDateFormat("yyyy-MM-dd")
         val calendar = Calendar.getInstance()
-        calendar.time = sdf.parse(data) as Date
 
 
-        val weatherHistory = mutableListOf<ShortWeatherInf>()
+
+        val weatherHistoryFuture = mutableListOf<ShortWeatherInf>()
 
         for (i in 0 until 14){
             val time = sdf.format(calendar.time)
-            val weather = weatherApi.getFutureWeather(apiKey, location, time)
+            val weather = weatherApi.getForecast(apiKey, location, time)
 
             with(weather.forecast.forecastday[0].day){
-                weatherHistory.add(
+                weatherHistoryFuture.add(
                     ShortWeatherInf(
-                        time, condition, avgtemp_c, avgtemp_f
+                        time, condition, avgtemp_c, avgtemp_f, true
                     )
                 )
             }
@@ -49,7 +48,7 @@ object WeatherRepositoryImpl : WeatherRepository {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
-        return weatherHistory
+        return weatherHistoryFuture
     }
 
     override suspend fun getWeatherTodayHistory(
@@ -61,7 +60,8 @@ object WeatherRepositoryImpl : WeatherRepository {
         for (dailyMoment in weather.forecast.forecastday[0].hour) {
             weatherHistory.add(
                 ShortWeatherInf(
-                    dailyMoment.time, dailyMoment.condition, dailyMoment.temp_c, dailyMoment.temp_f
+                    dailyMoment.time, dailyMoment.condition, dailyMoment.temp_c, dailyMoment.temp_f,
+                    dailyMoment.is_day == 1
                 )
             )
         }

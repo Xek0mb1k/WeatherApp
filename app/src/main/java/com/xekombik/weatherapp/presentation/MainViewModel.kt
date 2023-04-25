@@ -7,7 +7,7 @@ class MainViewModel(repository: WeatherRepository) : ViewModel() {
 
     private val getWeatherUseCase = GetWeatherUseCase(repository)
     private val getWeatherTodayHistoryUseCase = GetWeatherTodayHistoryUseCase(repository)
-    private val getFutureWeatherHistoryUseCase = GetFutureWeatherHistoryUseCase(repository)
+    private val getForecastUseCase = GetForecastUseCase(repository)
 
 
     suspend fun loadWeather(location: String): CurrentWeather {
@@ -18,8 +18,8 @@ class MainViewModel(repository: WeatherRepository) : ViewModel() {
         return getWeatherTodayHistoryUseCase.getWeatherTodayHistory(location, data)
     }
 
-    suspend fun getFutureWeatherHistory(location: String, data: String): List<ShortWeatherInf> {
-        return getFutureWeatherHistoryUseCase.getWeatherNextDaysHistory(location, data)
+    suspend fun getFutureWeatherHistory(location: String): List<ShortWeatherInf> {
+        return getForecastUseCase.getWeatherNextDaysHistory(location)
     }
 
 }

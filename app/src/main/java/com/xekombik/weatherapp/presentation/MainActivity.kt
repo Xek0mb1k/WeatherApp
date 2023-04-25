@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +13,9 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.xekombik.weatherapp.R
 import com.xekombik.weatherapp.databinding.ActivityMainBinding
+import com.xekombik.weatherapp.databinding.HourlyCardViewBinding
 import com.xekombik.weatherapp.domain.CurrentWeather
+import com.xekombik.weatherapp.domain.ShortWeatherInf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,19 +46,96 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.lastUpdatedDataTextView.setOnClickListener {
+            startRefresh()
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startRefresh()
+    }
+
+    private fun startRefresh() {
+        val location = "Moscow"
+        val todayData = SimpleDateFormat(
+            "yyyy-MM-dd",
+            Locale.getDefault()
+        ).format(Calendar.getInstance().time)
+
         CoroutineScope(Dispatchers.IO).launch {
-            val weather = vm.loadWeather("Moscow")
+
+            val weather = vm.loadWeather(location)
+            val hourlyData = vm.getWeatherTodayHistory(location, todayData)
+            // val futureData = vm.getFutureWeatherHistory(location, todayData)
 
             runOnUiThread {
-                refreshData(weather)
+                refreshData(weather, hourlyData)
             }
         }
     }
 
 
-    @SuppressLint("SetTextI18n", "DiscouragedApi")
-    fun refreshData(weather: CurrentWeather) {
+    @SuppressLint("SetTextI18n")
+    private fun refreshData(
+        weather: CurrentWeather,
+        hourlyData: List<ShortWeatherInf>
+    ) {
+        var stateLetter = getStateLetterAndSetBackground(weather)
+        val tempUnits = sharedPreferences.getString("temp_units", "º C")
+        with(binding) {
 
+
+            locationTextView.text = weather.location.name
+
+            todayDataTextView.text = formatDate(weather)
+
+            weatherImageView.setImageResource(
+                getImageResource(weather.current.condition.icon, stateLetter)
+            )
+
+            setTodayTemp(weather, tempUnits!!)
+
+            lastUpdatedDataTextView.text =
+                "Last updated ${weather.current.last_updated.split(" ")[1]}"
+        }
+
+
+        binding.hourlyWeatherLL.removeAllViews()
+        for (weatherElement in hourlyData) {
+            val vB = HourlyCardViewBinding.inflate(
+                LayoutInflater.from(this),
+                binding.hourlyWeatherLL,
+                false
+            )
+            val tempValue = if (tempUnits == "ºC") weatherElement.temp_c.toInt() else weatherElement.temp_f.toInt()
+
+            stateLetter = if (weatherElement.is_day)
+                'd'
+            else
+                'n'
+
+
+            vB.weatherHourlyImageView.setImageResource(getImageResource(weatherElement.condition.icon, stateLetter))
+            vB.hourlyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
+            vB.hourlyTimeTextView.text = weatherElement.time.split(" ")[1]
+
+            binding.hourlyWeatherLL.addView(vB.root)
+        }
+    }
+
+
+    private fun formatDate(weather: CurrentWeather): String? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH)
+        val date = dateFormat.parse(weather.current.last_updated)
+
+        val formattedDateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH)
+
+        return date?.let { formattedDateFormat.format(it) }
+    }
+
+    private fun getStateLetterAndSetBackground(weather: CurrentWeather): Char {
         val stateLetter: Char
         if (weather.current.is_day == 1) {
             binding.mainCardLayout.background = ContextCompat.getDrawable(
@@ -62,44 +143,33 @@ class MainActivity : AppCompatActivity() {
             )
             stateLetter = 'd'
         } else {
-            binding.mainCardLayout.background = ContextCompat.getDrawable(this,
-                R.drawable.night_linear_gradient)
+            binding.mainCardLayout.background = ContextCompat.getDrawable(
+                this,
+                R.drawable.night_linear_gradient
+            )
             stateLetter = 'n'
         }
+        return stateLetter
+    }
 
-        binding.locationTextView.text = weather.location.name
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH)
-        val date = dateFormat.parse(weather.current.last_updated)
-
-        val formattedDateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH)
-        val formattedDate = date?.let { formattedDateFormat.format(it) }
-        binding.todayDataTextView.text = formattedDate
-
-        val parts = weather.current.condition.icon.split("/")
+    @SuppressLint("DiscouragedApi")
+    private fun getImageResource(icon: String, stateLetter: Char): Int {
+        val parts = icon.split("/")
         val imageName = stateLetter + parts.last().split(".")[0]
+        return resources.getIdentifier(imageName, "drawable", packageName)
+    }
 
-        binding.weatherImageView.setImageResource(
-            resources.getIdentifier(imageName, "drawable", packageName)
-        )
+    @SuppressLint("SetTextI18n")
+    private fun setTodayTemp(weather: CurrentWeather, tempUnits: String) {
 
-        val tempUnits = sharedPreferences.getString("temp_units", "º C")
         if (tempUnits == "ºC") {
-            binding.weatherTodayTemperature.text = "${weather.current.temp_c}$tempUnits"
+            binding.weatherTodayTemperature.text = "${weather.current.temp_c.toInt()}$tempUnits"
         } else
-            binding.weatherTodayTemperature.text = "${weather.current.temp_f}$tempUnits"
+            binding.weatherTodayTemperature.text = "${weather.current.temp_f.toInt()}$tempUnits"
 
         binding.weatherTodayWeather.text = weather.current.condition.text
-
-
-        binding.lastUpdatedDataTextView.text =
-            "Last updated ${
-                weather.current.last_updated
-                    .split(" ")[1]
-                    .replace(":", ".")
-            }"
-
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_item, menu)

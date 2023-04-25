@@ -22,8 +22,8 @@ interface WeatherApi {
         @Query("dt") data: String
     ): DailyWeatherHistory
 
-    @GET("v1/future.json")
-    suspend fun getFutureWeather(
+    @GET("v1/forecast.json")
+    suspend fun getForecast(
         @Query("key") key: String,
         @Query("q") location: String,
         @Query("dt") data: String
