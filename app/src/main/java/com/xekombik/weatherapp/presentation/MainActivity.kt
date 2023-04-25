@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -67,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
 
             val weather = vm.loadWeather(location)
-            val hourlyData = vm.getWeatherTodayHistory(location, todayData)
+            val hourlyData = vm.getHourlyForecast(location, todayData)
             // val futureData = vm.getFutureWeatherHistory(location, todayData)
 
             runOnUiThread {

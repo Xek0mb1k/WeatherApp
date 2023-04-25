@@ -6,20 +6,20 @@ import com.xekombik.weatherapp.domain.*
 class MainViewModel(repository: WeatherRepository) : ViewModel() {
 
     private val getWeatherUseCase = GetWeatherUseCase(repository)
-    private val getWeatherTodayHistoryUseCase = GetWeatherTodayHistoryUseCase(repository)
+    private val getHourlyForecastUseCase = GetHourlyForecastUseCase(repository)
     private val getForecastUseCase = GetForecastUseCase(repository)
+    private val getCityListUseCase = GetCityListUseCase(repository)
 
 
     suspend fun loadWeather(location: String): CurrentWeather {
         return getWeatherUseCase.getWeather(location)
     }
 
-    suspend fun getWeatherTodayHistory(location: String, data: String): List<ShortWeatherInf> {
-        return getWeatherTodayHistoryUseCase.getWeatherTodayHistory(location, data)
+    suspend fun getHourlyForecast(location: String, data: String): List<ShortWeatherInf> {
+        return getHourlyForecastUseCase.getHourlyForecast(location, data)
     }
 
-    suspend fun getFutureWeatherHistory(location: String): List<ShortWeatherInf> {
-        return getForecastUseCase.getWeatherNextDaysHistory(location)
+    suspend fun getForecast(location: String): List<ShortWeatherInf> {
+        return getForecastUseCase.getForecast(location)
     }
-
 }

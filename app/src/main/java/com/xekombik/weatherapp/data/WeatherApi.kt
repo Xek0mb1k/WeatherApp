@@ -1,7 +1,6 @@
 package com.xekombik.weatherapp.data
 
 import com.xekombik.weatherapp.domain.CurrentWeather
-import com.xekombik.weatherapp.domain.DailyWeatherHistory
 import com.xekombik.weatherapp.domain.FutureWeather
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,17 +14,15 @@ interface WeatherApi {
         @Query("aqi") value: String
     ): CurrentWeather
 
-    @GET("v1/history.json")
-    suspend fun getDailyWeatherHistory(
-        @Query("key") key: String,
-        @Query("q") location: String,
-        @Query("dt") data: String
-    ): DailyWeatherHistory
-
     @GET("v1/forecast.json")
     suspend fun getForecast(
         @Query("key") key: String,
         @Query("q") location: String,
-        @Query("dt") data: String
+        @Query("days") days: Int,
+        @Query("aqi") aqi: String,
+        @Query("alerts") alerts: String,
+
     ): FutureWeather
+
+
 }

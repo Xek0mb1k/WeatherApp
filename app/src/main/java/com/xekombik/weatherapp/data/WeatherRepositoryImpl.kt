@@ -1,13 +1,10 @@
 package com.xekombik.weatherapp.data
 
-import android.annotation.SuppressLint
 import com.xekombik.weatherapp.domain.CurrentWeather
 import com.xekombik.weatherapp.domain.ShortWeatherInf
 import com.xekombik.weatherapp.domain.WeatherRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 object WeatherRepositoryImpl : WeatherRepository {
@@ -21,55 +18,51 @@ object WeatherRepositoryImpl : WeatherRepository {
 
     private val weatherApi: WeatherApi = retrofit.create(WeatherApi::class.java)
 
+    override suspend fun getForecast(location: String): List<ShortWeatherInf> {
 
-    @SuppressLint("SimpleDateFormat")
-    override suspend fun getForecast(
-        location: String
-    ): List<ShortWeatherInf> {
-        val sdf = SimpleDateFormat("yyyy-MM-dd")
-        val calendar = Calendar.getInstance()
+        val forecast = mutableListOf<ShortWeatherInf>()
 
+        val weather = weatherApi.getForecast(apiKey, location, 10, "no", "no")
 
-
-        val weatherHistoryFuture = mutableListOf<ShortWeatherInf>()
-
-        for (i in 0 until 14){
-            val time = sdf.format(calendar.time)
-            val weather = weatherApi.getForecast(apiKey, location, time)
-
-            with(weather.forecast.forecastday[0].day){
-                weatherHistoryFuture.add(
-                    ShortWeatherInf(
-                        time, condition, avgtemp_c, avgtemp_f, true
-                    )
+        for (dayPosition in 1 until weather.forecast.forecastday.size) {
+            with(weather.forecast.forecastday[dayPosition]) {
+                forecast.add(
+                    ShortWeatherInf(date, day.condition, day.avgtemp_c, day.avgtemp_f, true)
                 )
             }
-
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
-        return weatherHistoryFuture
+        return forecast
     }
 
-    override suspend fun getWeatherTodayHistory(
+    override suspend fun getHourlyForecast(
         location: String,
         data: String
     ): List<ShortWeatherInf> {
-        val weatherHistory = mutableListOf<ShortWeatherInf>()
-        val weather = weatherApi.getDailyWeatherHistory(apiKey, location, data)
-        for (dailyMoment in weather.forecast.forecastday[0].hour) {
-            weatherHistory.add(
-                ShortWeatherInf(
-                    dailyMoment.time, dailyMoment.condition, dailyMoment.temp_c, dailyMoment.temp_f,
-                    dailyMoment.is_day == 1
-                )
-            )
-        }
+        val forecastHourlyCurrentDay = mutableListOf<ShortWeatherInf>()
+        val weather = weatherApi.getForecast(apiKey, location, 10, "no", "no")
 
-        return weatherHistory
+        for (forecastDay in weather.forecast.forecastday)
+            if (forecastDay.date == data)
+                for (hour in forecastDay.hour)
+                    forecastHourlyCurrentDay.add(
+                        ShortWeatherInf(
+                            hour.time,
+                            hour.condition,
+                            hour.temp_c,
+                            hour.temp_f,
+                            hour.is_day == 1
+                        )
+                    )
+
+        return forecastHourlyCurrentDay
     }
 
     override suspend fun getWeather(location: String): CurrentWeather {
         return weatherApi.getWeather(apiKey, location, "no")
+    }
+
+    override suspend fun getCityList(city: String): List<String> {
+        return TODO("Not yet implemented")
     }
 }
