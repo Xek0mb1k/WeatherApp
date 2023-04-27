@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.xekombik.weatherapp.R
 import com.xekombik.weatherapp.databinding.ActivityMainBinding
+import com.xekombik.weatherapp.databinding.DailyCardViewBinding
 import com.xekombik.weatherapp.databinding.HourlyCardViewBinding
 import com.xekombik.weatherapp.domain.CurrentWeather
 import com.xekombik.weatherapp.domain.ShortWeatherInf
@@ -20,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
+import java.time.format.TextStyle
 import java.util.*
 
 
@@ -67,10 +70,10 @@ class MainActivity : AppCompatActivity() {
 
             val weather = vm.loadWeather(location)
             val hourlyData = vm.getHourlyForecast(location, todayData)
-            // val futureData = vm.getFutureWeatherHistory(location, todayData)
+            val forecastData = vm.getForecast(location)
 
             runOnUiThread {
-                refreshData(weather, hourlyData)
+                refreshData(weather, hourlyData, forecastData)
             }
         }
     }
@@ -79,7 +82,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun refreshData(
         weather: CurrentWeather,
-        hourlyData: List<ShortWeatherInf>
+        hourlyData: List<ShortWeatherInf>,
+        forecastData: List<ShortWeatherInf>
     ) {
         var stateLetter = getStateLetterAndSetBackground(weather)
         val tempUnits = sharedPreferences.getString("temp_units", "º C")
@@ -102,27 +106,58 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.hourlyWeatherLL.removeAllViews()
-        for (weatherElement in hourlyData) {
+        for (hourlyElement in hourlyData) {
             val vB = HourlyCardViewBinding.inflate(
                 LayoutInflater.from(this),
                 binding.hourlyWeatherLL,
                 false
             )
-            val tempValue = if (tempUnits == "ºC") weatherElement.temp_c.toInt() else weatherElement.temp_f.toInt()
+            val tempValue = if (tempUnits == "ºC") hourlyElement.temp_c.toInt() else hourlyElement.temp_f.toInt()
 
-            stateLetter = if (weatherElement.is_day)
+            stateLetter = if (hourlyElement.is_day)
                 'd'
             else
                 'n'
 
 
-            vB.weatherHourlyImageView.setImageResource(getImageResource(weatherElement.condition.icon, stateLetter))
+            vB.weatherHourlyImageView.setImageResource(getImageResource(hourlyElement.condition.icon, stateLetter))
             vB.hourlyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
-            vB.hourlyTimeTextView.text = weatherElement.time.split(" ")[1]
+            vB.hourlyTimeTextView.text = hourlyElement.time.split(" ")[1]
 
             binding.hourlyWeatherLL.addView(vB.root)
         }
+
+
+        binding.fromDailyListLL.removeAllViews()
+        for (dailyElement in forecastData){
+            Log.d("DDDDD", "DAy added")
+            val vB = DailyCardViewBinding.inflate(
+                LayoutInflater.from(this),
+                binding.fromDailyListLL,
+                false
+            )
+            val tempValue = if (tempUnits == "ºC") dailyElement.temp_c.toInt() else dailyElement.temp_f.toInt()
+            stateLetter = if (dailyElement.is_day)
+                'd'
+            else
+                'n'
+
+            vB.dailyWeatherIconImageView.setImageResource(getImageResource(dailyElement.condition.icon, stateLetter))
+            vB.dayOnTheWeekTextView.text = getDayOfTheWeek(dailyElement.time)
+            vB.weatherStateTextView.text = dailyElement.condition.text
+
+            vB.dailyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
+
+            vB.currentDayCardView.setOnClickListener {
+
+            }
+
+            binding.fromDailyListLL.addView(vB.root)
+        }
+
+
     }
+
 
 
     private fun formatDate(weather: CurrentWeather): String? {
@@ -167,6 +202,16 @@ class MainActivity : AppCompatActivity() {
             binding.weatherTodayTemperature.text = "${weather.current.temp_f.toInt()}$tempUnits"
 
         binding.weatherTodayWeather.text = weather.current.condition.text
+    }
+
+    private fun getDayOfTheWeek(date: String): String {
+
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val calendar = Calendar.getInstance()
+        calendar.time = formatter.parse(date) as Date
+
+        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) as String
+
     }
 
 

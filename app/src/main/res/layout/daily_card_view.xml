@@ -8,12 +8,14 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="6dp"
+
     android:backgroundTint="?attr/backgroundTint"
     app:cardCornerRadius="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/ripple_back">
 
         <ImageView
             android:id="@+id/dailyWeatherIconImageView"
@@ -43,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:textColor="#494343"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/dailyWeatherIconImageView"
             app:layout_constraintStart_toEndOf="@+id/dailyWeatherIconImageView"

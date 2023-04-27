@@ -3,7 +3,7 @@
     <string name="weather_icon">WeatherIcon</string>
     <string name="refresh_data">RefreshData</string>
     <string name="hourly_weather">Hourly Weather</string>
-    <string name="nt_days">Next 14 days</string>
+    <string name="nt_days">Next days</string>
     <string name="location_icon">LocationIcon</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
