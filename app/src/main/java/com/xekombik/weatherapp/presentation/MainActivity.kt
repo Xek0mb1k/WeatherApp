@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
 import com.xekombik.weatherapp.R
 import com.xekombik.weatherapp.databinding.ActivityMainBinding
 import com.xekombik.weatherapp.databinding.DailyCardViewBinding
@@ -22,7 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
-import java.time.format.TextStyle
 import java.util.*
 
 
@@ -37,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        sharedPreferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this)
 
         setSupportActionBar(binding.activityMainToolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -51,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         binding.lastUpdatedDataTextView.setOnClickListener {
             startRefresh()
         }
+
+        // TODO("CREATE INTENT TO WEATHER DETAIL ACTIVITY")
 
     }
 
@@ -129,22 +128,26 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.fromDailyListLL.removeAllViews()
-        for (dailyElement in forecastData){
-            Log.d("DDDDD", "DAy added")
+        for (dayPosition in forecastData.indices){
             val vB = DailyCardViewBinding.inflate(
                 LayoutInflater.from(this),
                 binding.fromDailyListLL,
                 false
             )
-            val tempValue = if (tempUnits == "ºC") dailyElement.temp_c.toInt() else dailyElement.temp_f.toInt()
-            stateLetter = if (dailyElement.is_day)
+            val tempValue = if (tempUnits == "ºC") forecastData[dayPosition].temp_c.toInt() else forecastData[dayPosition].temp_f.toInt()
+            stateLetter = if (forecastData[dayPosition].is_day)
                 'd'
             else
                 'n'
 
-            vB.dailyWeatherIconImageView.setImageResource(getImageResource(dailyElement.condition.icon, stateLetter))
-            vB.dayOnTheWeekTextView.text = getDayOfTheWeek(dailyElement.time)
-            vB.weatherStateTextView.text = dailyElement.condition.text
+            vB.dailyWeatherIconImageView.setImageResource(getImageResource(forecastData[dayPosition].condition.icon, stateLetter))
+
+            if (dayPosition == 0)
+                vB.dayOnTheWeekTextView.text = "Today"
+            else
+                vB.dayOnTheWeekTextView.text = getDayOfTheWeek(forecastData[dayPosition].time)
+
+            vB.weatherStateTextView.text = forecastData[dayPosition].condition.text
 
             vB.dailyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
 

@@ -24,7 +24,7 @@ object WeatherRepositoryImpl : WeatherRepository {
 
         val weather = weatherApi.getForecast(apiKey, location, 10, "no", "no")
 
-        for (dayPosition in 1 until weather.forecast.forecastday.size) {
+        for (dayPosition in 0 until weather.forecast.forecastday.size) {
             with(weather.forecast.forecastday[dayPosition]) {
                 forecast.add(
                     ShortWeatherInf(date, day.condition, day.avgtemp_c, day.avgtemp_f, true)
@@ -63,6 +63,13 @@ object WeatherRepositoryImpl : WeatherRepository {
     }
 
     override suspend fun getCityList(city: String): List<String> {
-        return TODO("Not yet implemented")
+        val placeList = mutableListOf<String>()
+        val placesData = weatherApi.getPlaces(apiKey, city)
+
+        for (placeItem in placesData){
+            placeList.add("${placeItem.name}, ${placeItem.country}")
+        }
+
+        return placeList
     }
 }

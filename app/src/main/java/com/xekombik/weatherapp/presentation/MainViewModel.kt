@@ -8,7 +8,7 @@ class MainViewModel(repository: WeatherRepository) : ViewModel() {
     private val getWeatherUseCase = GetWeatherUseCase(repository)
     private val getHourlyForecastUseCase = GetHourlyForecastUseCase(repository)
     private val getForecastUseCase = GetForecastUseCase(repository)
-    private val getCityListUseCase = GetCityListUseCase(repository)
+    private val getPlaceListUseCase = GetCityListUseCase(repository)
 
 
     suspend fun loadWeather(location: String): CurrentWeather {
@@ -21,5 +21,9 @@ class MainViewModel(repository: WeatherRepository) : ViewModel() {
 
     suspend fun getForecast(location: String): List<ShortWeatherInf> {
         return getForecastUseCase.getForecast(location)
+    }
+
+    suspend fun getPlace(city: String): List<String> {
+        return getPlaceListUseCase.getCityList(city)
     }
 }

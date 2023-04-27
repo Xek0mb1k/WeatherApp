@@ -9,4 +9,6 @@ class ChangeLocationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_location)
     }
+
+    // TODO("IMPLEMENTATION SEARCH LOCATION HERE")
 }
