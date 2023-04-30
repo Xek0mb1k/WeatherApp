@@ -43,7 +43,7 @@ class ChangeLocationActivity : AppCompatActivity() {
 
         binding.searchView.setOnEditorActionListener { _, _, _ ->
             if (binding.searchView.text.length <= 2) {
-                Toast.makeText(this, "Please input more letter!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please, input more letter!", Toast.LENGTH_SHORT).show()
             } else {
                 startSearch(binding.searchView.text.toString())
                 closeKeyboard()
