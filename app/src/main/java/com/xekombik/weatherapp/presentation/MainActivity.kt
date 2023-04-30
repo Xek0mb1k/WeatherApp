@@ -1,18 +1,27 @@
 package com.xekombik.weatherapp.presentation
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationServices
 import com.xekombik.weatherapp.R
 import com.xekombik.weatherapp.databinding.ActivityMainBinding
 import com.xekombik.weatherapp.databinding.DailyCardViewBinding
 import com.xekombik.weatherapp.databinding.HourlyCardViewBinding
+import com.xekombik.weatherapp.domain.Condition
 import com.xekombik.weatherapp.domain.CurrentWeather
 import com.xekombik.weatherapp.domain.ShortWeatherInf
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +58,6 @@ class MainActivity : AppCompatActivity() {
             startRefresh()
         }
 
-        // TODO("CREATE INTENT TO WEATHER DETAIL ACTIVITY")
 
     }
 
@@ -59,7 +67,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startRefresh() {
-        val location = "Moscow"
+        val location = sharedPreferences.getString("location", "Moscow")!!
+        val isChosenLocationMode = sharedPreferences.getBoolean("isChosenLocationMode", false)
+        if (isChosenLocationMode) {
+            binding.locationIconView.visibility = VISIBLE
+        } else
+            binding.locationIconView.visibility = GONE
+
         val todayData = SimpleDateFormat(
             "yyyy-MM-dd",
             Locale.getDefault()
@@ -85,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         forecastData: List<ShortWeatherInf>
     ) {
         var stateLetter = getStateLetterAndSetBackground(weather)
-        val tempUnits = sharedPreferences.getString("temp_units", "º C")
+        val tempUnits = sharedPreferences.getString("temp_units", "ºC")
         with(binding) {
 
 
@@ -111,7 +125,9 @@ class MainActivity : AppCompatActivity() {
                 binding.hourlyWeatherLL,
                 false
             )
-            val tempValue = if (tempUnits == "ºC") hourlyElement.temp_c.toInt() else hourlyElement.temp_f.toInt()
+
+            val tempValue =
+                if (tempUnits == "ºC") hourlyElement.temp_c.toInt() else hourlyElement.temp_f.toInt()
 
             stateLetter = if (hourlyElement.is_day)
                 'd'
@@ -119,7 +135,12 @@ class MainActivity : AppCompatActivity() {
                 'n'
 
 
-            vB.weatherHourlyImageView.setImageResource(getImageResource(hourlyElement.condition.icon, stateLetter))
+            vB.weatherHourlyImageView.setImageResource(
+                getImageResource(
+                    hourlyElement.condition.icon,
+                    stateLetter
+                )
+            )
             vB.hourlyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
             vB.hourlyTimeTextView.text = hourlyElement.time.split(" ")[1]
 
@@ -128,19 +149,25 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.fromDailyListLL.removeAllViews()
-        for (dayPosition in forecastData.indices){
+        for (dayPosition in forecastData.indices) {
             val vB = DailyCardViewBinding.inflate(
                 LayoutInflater.from(this),
                 binding.fromDailyListLL,
                 false
             )
-            val tempValue = if (tempUnits == "ºC") forecastData[dayPosition].temp_c.toInt() else forecastData[dayPosition].temp_f.toInt()
+            val tempValue =
+                if (tempUnits == "ºC") forecastData[dayPosition].temp_c.toInt() else forecastData[dayPosition].temp_f.toInt()
             stateLetter = if (forecastData[dayPosition].is_day)
                 'd'
             else
                 'n'
 
-            vB.dailyWeatherIconImageView.setImageResource(getImageResource(forecastData[dayPosition].condition.icon, stateLetter))
+            vB.dailyWeatherIconImageView.setImageResource(
+                getImageResource(
+                    forecastData[dayPosition].condition.icon,
+                    stateLetter
+                )
+            )
 
             if (dayPosition == 0)
                 vB.dayOnTheWeekTextView.text = "Today"
@@ -152,7 +179,10 @@ class MainActivity : AppCompatActivity() {
             vB.dailyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
 
             vB.currentDayCardView.setOnClickListener {
-
+                val intent = Intent(this, WeatherDetailActivity::class.java)
+                intent.putExtra("location", weather.location.name)
+                intent.putExtra("day_position", dayPosition)
+                startActivity(intent)
             }
 
             binding.fromDailyListLL.addView(vB.root)
@@ -160,7 +190,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
 
 
     private fun formatDate(weather: CurrentWeather): String? {
@@ -205,6 +234,7 @@ class MainActivity : AppCompatActivity() {
             binding.weatherTodayTemperature.text = "${weather.current.temp_f.toInt()}$tempUnits"
 
         binding.weatherTodayWeather.text = weather.current.condition.text
+
     }
 
     private fun getDayOfTheWeek(date: String): String {
@@ -213,7 +243,11 @@ class MainActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         calendar.time = formatter.parse(date) as Date
 
-        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH) as String
+        return calendar.getDisplayName(
+            Calendar.DAY_OF_WEEK,
+            Calendar.LONG,
+            Locale.ENGLISH
+        ) as String
 
     }
 
@@ -230,6 +264,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+
             R.id.about -> {
                 val intent = Intent(this, AboutActivity::class.java)
                 startActivity(intent)

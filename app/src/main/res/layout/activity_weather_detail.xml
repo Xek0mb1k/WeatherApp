@@ -25,8 +25,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
             <ImageButton
                 android:id="@+id/toHomeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/ripple_back"
                 android:src="@drawable/chevron_left"
                 android:contentDescription="@string/to_home" />
@@ -78,22 +78,8 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="Cloudy Rain" />
-
-        <TextView
-            android:id="@+id/lastUpdatedDetailTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="33dp"
-            android:layout_marginBottom="25dp"
-            android:drawablePadding="8dp"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:drawableRightCompat="@drawable/ic_baseline_refresh_24"
-            tools:text="Last updated 3.00" />
-
-
+            tools:text="Cloudy Rain"
+            android:layout_marginBottom="25dp"/>
     </LinearLayout>
 
     <ScrollView

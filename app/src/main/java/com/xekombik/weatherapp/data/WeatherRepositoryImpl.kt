@@ -10,7 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 object WeatherRepositoryImpl : WeatherRepository {
 
     private const val apiKey = "9f9990f6468e4ee282d72005232604"
-//    0620d325c4474180ae5193531232504
+
+    //    0620d325c4474180ae5193531232504
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://api.weatherapi.com/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -27,7 +28,19 @@ object WeatherRepositoryImpl : WeatherRepository {
         for (dayPosition in 0 until weather.forecast.forecastday.size) {
             with(weather.forecast.forecastday[dayPosition]) {
                 forecast.add(
-                    ShortWeatherInf(date, day.condition, day.avgtemp_c, day.avgtemp_f, true)
+                    ShortWeatherInf(
+                        date,
+                        day.condition,
+                        day.avgtemp_c,
+                        day.avgtemp_f,
+                        true,
+                        day.avgvis_km,
+                        day.avgvis_miles,
+                        day.avghumidity,
+                        day.maxwind_mph,
+                        day.maxwind_kph,
+                        hour[12].pressure_mb
+                    )
                 )
             }
         }
@@ -66,7 +79,7 @@ object WeatherRepositoryImpl : WeatherRepository {
         val placeList = mutableListOf<String>()
         val placesData = weatherApi.getPlaces(apiKey, city)
 
-        for (placeItem in placesData){
+        for (placeItem in placesData) {
             placeList.add("${placeItem.name}, ${placeItem.country}")
         }
 

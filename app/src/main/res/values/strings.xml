@@ -38,4 +38,7 @@
     <string name="github">github</string>
     <string name="current">Current</string>
     <string name="to_home">To Home</string>
+    <string name="error_icon">Error icon</string>
+    <string name="error_message">No results</string>
+    <string name="enter_a_place_name">Enter a place name</string>
 </resources>
