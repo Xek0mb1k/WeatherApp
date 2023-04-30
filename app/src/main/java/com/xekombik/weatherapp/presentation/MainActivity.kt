@@ -50,7 +50,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.lastUpdatedDataTextView.setOnClickListener {
             startRefresh()
-            Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
+            if (CheckInternetConnection().checkForInternet(this)) {
+                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
+            }
         }
 
 
@@ -62,28 +64,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startRefresh() {
-        val location = sharedPreferences.getString("location", "Moscow")!!
-        val isChosenLocationMode = sharedPreferences.getBoolean("isChosenLocationMode", false)
-        if (isChosenLocationMode) {
-            binding.locationIconView.visibility = VISIBLE
-        } else
-            binding.locationIconView.visibility = GONE
+        if (CheckInternetConnection().checkForInternet(this)) {
+            val location = sharedPreferences.getString("location", "Moscow")!!
+            val isChosenLocationMode =
+                sharedPreferences.getBoolean("isChosenLocationMode", false)
+            if (isChosenLocationMode) {
+                binding.locationIconView.visibility = VISIBLE
+            } else
+                binding.locationIconView.visibility = GONE
 
-        val todayData = SimpleDateFormat(
-            "yyyy-MM-dd",
-            Locale.getDefault()
-        ).format(Calendar.getInstance().time)
+            val todayData = SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.getDefault()
+            ).format(Calendar.getInstance().time)
 
-        CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
 
-            val weather = vm.loadWeather(location)
-            val hourlyData = vm.getHourlyForecast(location, todayData)
-            val forecastData = vm.getForecast(location)
+                val weather = vm.loadWeather(location)
+                val hourlyData = vm.getHourlyForecast(location, todayData)
+                val forecastData = vm.getForecast(location)
 
-            runOnUiThread {
-                refreshData(weather, hourlyData, forecastData)
+                runOnUiThread {
+                    refreshData(weather, hourlyData, forecastData)
+                }
             }
-        }
+        } else
+            Toast.makeText(
+                this, "Check your internet connection", Toast.LENGTH_SHORT
+            ).show()
     }
 
 

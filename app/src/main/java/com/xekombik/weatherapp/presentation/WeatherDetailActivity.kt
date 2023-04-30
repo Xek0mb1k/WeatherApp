@@ -4,6 +4,7 @@ package com.xekombik.weatherapp.presentation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 import com.xekombik.weatherapp.databinding.ActivityWeatherDetailBinding
@@ -37,7 +38,12 @@ class WeatherDetailActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        setData()
+        if (CheckInternetConnection().checkForInternet(this))
+            setData()
+        else
+            Toast.makeText(
+                this, "Check your internet connection", Toast.LENGTH_SHORT
+            ).show()
     }
 
     @SuppressLint("SetTextI18n")
@@ -85,7 +91,7 @@ class WeatherDetailActivity : AppCompatActivity() {
                     forecastData[dayPosition].condition.text
 
                 binding.hourlyWeatherLL.removeAllViews()
-                for (hourlyItem in hourlyData){
+                for (hourlyItem in hourlyData) {
                     val vB = HourlyCardViewBinding.inflate(
                         LayoutInflater.from(this@WeatherDetailActivity),
                         binding.hourlyWeatherLL,

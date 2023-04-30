@@ -45,8 +45,14 @@ class ChangeLocationActivity : AppCompatActivity() {
             if (binding.searchView.text.length <= 2) {
                 Toast.makeText(this, "Please, input more letter!", Toast.LENGTH_SHORT).show()
             } else {
-                startSearch(binding.searchView.text.toString())
-                closeKeyboard()
+                if (CheckInternetConnection().checkForInternet(this)) {
+                    startSearch(binding.searchView.text.toString())
+                    closeKeyboard()
+                }else
+                    Toast.makeText(
+                        this, "Check your internet connection", Toast.LENGTH_SHORT
+                    ).show()
+
             }
             true
         }
