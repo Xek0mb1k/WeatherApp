@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Unit">
+
+
+        <DropDownPreference
+            android:defaultValue="ºC"
+            android:dialogTitle="Select Temperature Units"
+            android:entries="@array/temp_units"
+            android:entryValues="@array/temp_units"
+            android:key="temp_units"
+            android:title="Temperature Units"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            android:defaultValue="km/h"
+            android:dialogTitle="Select Speed Units"
+            android:entries="@array/speed_units"
+            android:entryValues="@array/speed_units"
+            android:key="speed_units"
+            android:title="Speed Units"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

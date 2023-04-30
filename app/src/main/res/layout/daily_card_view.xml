@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/currentDayCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="6dp"
+
+    android:backgroundTint="?attr/backgroundTint"
+    app:cardCornerRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ripple_back">
+
+        <ImageView
+            android:id="@+id/dailyWeatherIconImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/weather_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/d296" />
+
+        <TextView
+            android:id="@+id/dayOnTheWeekTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/weatherStateTextView"
+            app:layout_constraintStart_toEndOf="@+id/dailyWeatherIconImageView"
+            app:layout_constraintTop_toTopOf="@+id/dailyWeatherIconImageView"
+            tools:text="Monday" />
+
+        <TextView
+            android:id="@+id/weatherStateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/dailyWeatherIconImageView"
+            app:layout_constraintStart_toEndOf="@+id/dailyWeatherIconImageView"
+            app:layout_constraintTop_toBottomOf="@+id/dayOnTheWeekTextView"
+            tools:text="Thunderstorm" />
+
+        <TextView
+            android:id="@+id/dailyTemperatureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/arrowImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.509"
+            tools:text="19º C" />
+
+        <ImageView
+            android:id="@+id/arrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/arrow"
+            android:rotation="-90"
+            android:src="@drawable/ic_baseline_arrow_right_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
