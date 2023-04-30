@@ -1,27 +1,21 @@
 package com.xekombik.weatherapp.presentation
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.LocationServices
 import com.xekombik.weatherapp.R
 import com.xekombik.weatherapp.databinding.ActivityMainBinding
 import com.xekombik.weatherapp.databinding.DailyCardViewBinding
 import com.xekombik.weatherapp.databinding.HourlyCardViewBinding
-import com.xekombik.weatherapp.domain.Condition
 import com.xekombik.weatherapp.domain.CurrentWeather
 import com.xekombik.weatherapp.domain.ShortWeatherInf
 import kotlinx.coroutines.CoroutineScope
@@ -56,6 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.lastUpdatedDataTextView.setOnClickListener {
             startRefresh()
+            Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -103,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
 
 
-            locationTextView.text = weather.location.name
+            locationTextView.text = weather.location.name + ", " + weather.location.country
 
             todayDataTextView.text = formatDate(weather)
 
@@ -120,31 +115,32 @@ class MainActivity : AppCompatActivity() {
 
         binding.hourlyWeatherLL.removeAllViews()
         for (hourlyElement in hourlyData) {
-            val vB = HourlyCardViewBinding.inflate(
-                LayoutInflater.from(this),
-                binding.hourlyWeatherLL,
-                false
-            )
-
-            val tempValue =
-                if (tempUnits == "ºC") hourlyElement.temp_c.toInt() else hourlyElement.temp_f.toInt()
-
-            stateLetter = if (hourlyElement.is_day)
-                'd'
-            else
-                'n'
-
-
-            vB.weatherHourlyImageView.setImageResource(
-                getImageResource(
-                    hourlyElement.condition.icon,
-                    stateLetter
+            if (hourlyElement.time >= weather.location.localtime) {
+                val vB = HourlyCardViewBinding.inflate(
+                    LayoutInflater.from(this),
+                    binding.hourlyWeatherLL,
+                    false
                 )
-            )
-            vB.hourlyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
-            vB.hourlyTimeTextView.text = hourlyElement.time.split(" ")[1]
 
-            binding.hourlyWeatherLL.addView(vB.root)
+                val tempValue =
+                    if (tempUnits == "ºC") hourlyElement.temp_c.toInt() else hourlyElement.temp_f.toInt()
+
+                stateLetter = if (hourlyElement.is_day)
+                    'd'
+                else
+                    'n'
+
+                vB.weatherHourlyImageView.setImageResource(
+                    getImageResource(
+                        hourlyElement.condition.icon,
+                        stateLetter
+                    )
+                )
+                vB.hourlyTemperatureTextView.text = "${tempValue}${tempUnits!![0]}"
+                vB.hourlyTimeTextView.text = hourlyElement.time.split(" ")[1]
+
+                binding.hourlyWeatherLL.addView(vB.root)
+            }
         }
 
 
@@ -180,8 +176,9 @@ class MainActivity : AppCompatActivity() {
 
             vB.currentDayCardView.setOnClickListener {
                 val intent = Intent(this, WeatherDetailActivity::class.java)
-                intent.putExtra("location", weather.location.name)
+                intent.putExtra("location", weather.location.name + ", " + weather.location.country)
                 intent.putExtra("day_position", dayPosition)
+                intent.putExtra("data", forecastData[dayPosition].time)
                 startActivity(intent)
             }
 
@@ -275,44 +272,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-
-
-//        val bu = findViewById<Button>(R.id.bu)
-//        val thb = findViewById<Button>(R.id.thb)
-//        val ndb = findViewById<Button>(R.id.ndb)
-//
-//        bu.setOnClickListener {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val weather = vm.loadWeather("55.85, 37")
-//                runOnUiThread {
-//                    Log.d(
-//                        "WEATHER_TEST",
-//                        (weather.location.name) + "  " +
-//                                (weather.current.last_updated) + " " +
-//                                (weather.current.temp_c) + " " +
-//                                (weather.location.localtime)
-//                    )
-//                }
-//            }
-//        }
-//        thb.setOnClickListener {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val weatherToday = vm.getWeatherTodayHistory("55.85, 37", "2023-01-01")
-//                runOnUiThread {
-//                    for (item in weatherToday){
-//                        Log.d("WEATHER_TEST", item.time + " " + item.temp_c + " " + item.condition.text)
-//                    }
-//                }
-//            }
-//        }
-//
-//        ndb.setOnClickListener {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val weatherFuture = vm.getFutureWeatherHistory("55.85, 37", "2023-05-20")
-//                runOnUiThread {
-//                    for (item in weatherFuture){
-//                        Log.d("WEATHER_TEST", item.time + " " + item.temp_c)
-//                    }
-//                }
-//            }
-//        }

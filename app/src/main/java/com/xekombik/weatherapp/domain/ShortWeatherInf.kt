@@ -11,5 +11,5 @@ data class ShortWeatherInf(
     val humidity: Double = 0.0,
     val wind_mph: Double = 0.0,
     val wind_kph: Double = 0.0,
-    val pressure_mb: Double = 0.0
+    val pressure_mb: Double = 0.0,
 )
