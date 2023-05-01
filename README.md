@@ -1,4 +1,4 @@
-# Weather App in Kotlin
+# Weather App
 
 ## Project Description
 
@@ -13,9 +13,10 @@ The Weather App in Kotlin is an application that shows the weather in a given lo
 
 ## Application screenshots
 ### light theme
-  <img src="https://user-images.githubusercontent.com/84407094/235374968-23ceaa99-a5c9-449f-afe5-2c1cdce2f890.png" width="200" />   <img src="https://user-images.githubusercontent.com/84407094/235374920-f32901d2-cecd-4a18-a848-7e1699b01236.png" width="200" /> <img src="https://user-images.githubusercontent.com/84407094/235374833-76547edf-3286-4333-86dd-77db76ba4ebd.png" width="200" />
+  <img src="https://user-images.githubusercontent.com/84407094/235418283-4a00e167-3ef4-42c9-b82e-9b05a4db3f86.png" width="200" />   <img src="https://user-images.githubusercontent.com/84407094/235418368-48fd765a-0ff9-4651-b160-12b244165985.png" width="200" /> <img src="https://user-images.githubusercontent.com/84407094/235418519-2b57867f-5068-40d0-a9a5-d86f26268667.png" width="200" /> <img src="https://user-images.githubusercontent.com/84407094/235418548-fdbe8751-2647-4218-a41c-03c36d38bd60.png" width="200" />
 
 ### dark theme
+<img src="https://user-images.githubusercontent.com/84407094/235418435-ae13b9f4-a85f-42c0-a226-a7674bf8b653.png" width="200" /> <img src="https://user-images.githubusercontent.com/84407094/235418882-0741aeee-f2a1-42fc-8d80-f216de45d098.png" width="200" /> <img src="https://user-images.githubusercontent.com/84407094/235418493-c0fc70aa-68d1-4dbf-aa19-4562d25eef2d.png" width="200" /> <img src="https://user-images.githubusercontent.com/84407094/235418569-d3297b15-b505-4f2b-8753-90baa39a1051.png" width="200"  /> 
 
 ## Application structure.
 
